@@ -28,8 +28,17 @@ class Player(pygame.sprite.Sprite):
 		self.rect.centerx = Width / 2
 		self.rect.bottom = Height - 10
 		self.speedx = 0
+		self.speedy = 0
 
 	def update(self):
+		self.speedx = 0
+		self.speedy = 0
+		keystate = pygame.key.get_pressed()
+		if keystate[pygame.K_LEFT]:
+			self.speedx = -5
+		if keystate[pygame.K_RIGHT]:
+			self.speedx = 5
+		print(keystate[pygame.K_LEFT])
 		self.rect.x += self.speedx
 
 #stuff
@@ -49,6 +58,7 @@ def main():
 
 		clock.tick(Fps)
 
+		#Events
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				running = False
