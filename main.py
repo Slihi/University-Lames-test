@@ -6,6 +6,8 @@ import random
 # vars
 Width = 600
 Height = 600
+Ship_Width = 40
+Ship_Height = 60
 Fps = 60
 
 # Colours
@@ -14,6 +16,8 @@ Black = (0, 0, 0)
 Red = (255, 0, 0)
 Green = (0, 255, 0)
 Blue = (0, 0, 255)
+Ship_H_Acceleration = 1.15
+Ship_H_Speed_Cap = 3
 
 #Pygame Initialize
 pygame.init()
@@ -22,7 +26,7 @@ pygame.mixer.init()
 class Player(pygame.sprite.Sprite):
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
-		self.image = pygame.Surface((40,60))
+		self.image = pygame.Surface((Ship_Width,Ship_Height))
 		self.image.fill(Green)
 		self.rect = self.image.get_rect()
 		self.rect.centerx = Width / 2
@@ -36,17 +40,19 @@ class Player(pygame.sprite.Sprite):
 			self.speedx = 0
 		#self.speedy = 0
 		if keystate[pygame.K_LEFT]:
-			self.speedx -= 1.77
+			self.speedx -= Ship_H_Acceleration
 		if keystate[pygame.K_RIGHT]:
-			self.speedx += 1.77
+			self.speedx += Ship_H_Acceleration
 		#speedcap
-		if self.speedx > 3:
-			self.speedx = 3
-		if self.speedx < -3:
-			self.speedx = -3
-
-		print(self.speedx)
-		self.rect.x += self.speedx
+		#print(self.speedx)
+		if self.speedx > Ship_H_Speed_Cap:
+			self.speedx = Ship_H_Speed_Cap
+		if self.speedx < -Ship_H_Speed_Cap:
+			self.speedx = -Ship_H_Speed_Cap
+		#boundary cap
+		#print(self.rect.x)
+		if (self.rect.x > 3 and self.speedx < 0) or (self.rect.x < Width - Ship_Width -3 and self.speedx > 0) :
+			self.rect.x += self.speedx
 
 #stuff
 screen = pygame.display.set_mode((Width, Height))
