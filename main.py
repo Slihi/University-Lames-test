@@ -18,6 +18,8 @@ Green = (0, 255, 0)
 Blue = (0, 0, 255)
 Ship_H_Acceleration = 1.15
 Ship_H_Speed_Cap = 3
+Ship_V_Acceleration = 1.15
+Ship_V_Speed_Cap = 2
 
 #Pygame Initialize
 pygame.init()
@@ -32,27 +34,48 @@ class Player(pygame.sprite.Sprite):
 		self.rect.centerx = Width / 2
 		self.rect.bottom = Height - 10
 		self.speedx = 0
-		#self.speedy = 0
+		self.speedy = 0
 
 	def update(self):
 		keystate = pygame.key.get_pressed()
+
+		#Reset speed with no button
 		if not keystate[pygame.K_LEFT] and not keystate[pygame.K_RIGHT]:
 			self.speedx = 0
-		#self.speedy = 0
+		if not keystate[pygame.K_UP] and not keystate[pygame.K_DOWN]:
+			self.speedy = 0
+
+		#Apply speed x
 		if keystate[pygame.K_LEFT]:
 			self.speedx -= Ship_H_Acceleration
 		if keystate[pygame.K_RIGHT]:
 			self.speedx += Ship_H_Acceleration
-		#speedcap
+
+		#Apply speed y
+		if keystate[pygame.K_UP]:
+			self.speedy -= Ship_V_Acceleration
+		if keystate[pygame.K_DOWN]:
+			self.speedy += Ship_V_Acceleration
+
+		#speedcap x
 		#print(self.speedx)
 		if self.speedx > Ship_H_Speed_Cap:
 			self.speedx = Ship_H_Speed_Cap
 		if self.speedx < -Ship_H_Speed_Cap:
 			self.speedx = -Ship_H_Speed_Cap
-		#boundary cap
-		#print(self.rect.x)
+
+		#speedcap y
+		if self.speedy > Ship_V_Speed_Cap:
+			self.speedy = Ship_V_Speed_Cap
+		if self.speedy < -Ship_V_Speed_Cap:
+			self.speedy = -Ship_V_Speed_Cap
+
+		#Movement + boundary cap
+		#print(self.rect)
 		if (self.rect.x > 3 and self.speedx < 0) or (self.rect.x < Width - Ship_Width -3 and self.speedx > 0) :
 			self.rect.x += self.speedx
+		if (self.rect.y > 2 and self.speedy < 0) or (self.rect.y < Height - Ship_Height -2 and self.speedy > 0):
+			self.rect.y += self.speedy
 
 #stuff
 screen = pygame.display.set_mode((Width, Height))
